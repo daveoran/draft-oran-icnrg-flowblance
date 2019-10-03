@@ -1,11 +1,11 @@
-# icn-flic-manifest
-FLIC Manifest RFC draft
+# oran-icnrg-flowbalance	
+ICN Flow Balance RFC draft
 
 # Editing
 
 Inside each draft, you should use the suffix '-latest' in the draft name, for example:
 ```
-<rfc category="exp" docName="draft-irtf-icnrg-ccnxmessages-latest" ipr="trust200902">
+<rfc category="exp" docName="draftÑoran-icnrg-flowbalance-latest" ipr="trust200902">
 ```
 
 The file `versions` contains the draft version number for each document.  After you edit
