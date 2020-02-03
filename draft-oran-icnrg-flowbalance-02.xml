@@ -27,7 +27,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="exp" docName="draft-oran-icnrg-flowbalance-01" ipr="trust200902" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="exp" docName="draft-oran-icnrg-flowbalance-02" ipr="trust200902" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
   <!-- xml2rfc v2v3 conversion 2.39.0 -->
   <!-- category values: std, bcp, info, exp, and historic
      ipr values: full3667, noModification3667, noDerivatives3667
@@ -41,7 +41,7 @@
     <title abbrev="Maintaining Flow Balance">
     Maintaining CCNx or NDN flow balance with highly variable data object sizes
     </title>
-    <seriesInfo name="Internet-Draft" value="draft-oran-icnrg-flowbalance-01"/>
+    <seriesInfo name="Internet-Draft" value="draft-oran-icnrg-flowbalance-02"/>
     <!-- add 'role="editor"' below for the editors if appropriate -->
 
     <!-- Another author who claims to be an editor -->
@@ -61,7 +61,7 @@
         <!-- uri and facsimile elements may also be added -->
         </address>
     </author>
-    <date month="August" year="2019"/>
+    <date month="February" year="2020"/>
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
 	 in the current day and month for you. If the year is not the current one, it is 
@@ -452,6 +452,7 @@ This specification does not define or recommend any particular algorithm for ass
     <!-- Change Log
 v00 2019-07-13  DRO Initial version
 v01 2019-08-10	DRO	Respond to comments by Naveen Nathan and Klaus Schneider 
+v02 2020-02-03	DRO Converted to xml2rfc V3 and monor text adjustments
 	-->
   </back>
 </rfc>
