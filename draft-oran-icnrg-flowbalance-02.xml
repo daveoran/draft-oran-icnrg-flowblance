@@ -423,7 +423,7 @@ This specification does not define or recommend any particular algorithm for ass
           <front>
             <title>Named Data Networking</title>
             <author surname="NDN team"/>
-            <date>various</date>
+            <date></date>
           </front>
         </reference>
         <reference anchor="NDNTLV" target="http://named-data.net/doc/ndn-tlv/">
@@ -437,14 +437,14 @@ This specification does not define or recommend any particular algorithm for ass
           <front>
             <title>Max-min Fairness</title>
             <author surname="Wikipedia"/>
-            <date>various</date>
+            <date></date>
           </front>
         </reference>
         <reference anchor="proportionalfairness" target="https://en.wikipedia.org/wiki/Proportionally_fair">
           <front>
             <title>Proportionally Fair</title>
             <author surname="Wikipedia"/>
-            <date>various</date>
+            <date></date>
           </front>
         </reference>
       </references>
