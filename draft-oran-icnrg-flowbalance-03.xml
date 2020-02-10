@@ -27,7 +27,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="exp" docName="draft-oran-icnrg-flowbalance-latest" ipr="trust200902" obsoletes="" updates="" submissionType="IRTF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="exp" docName="draft-oran-icnrg-flowbalance-03" ipr="trust200902" obsoletes="" updates="" submissionType="IRTF" xml:lang="en" tocInclude="true" tocDepth="4" symRefs="true" sortRefs="true" version="3">
   <!-- xml2rfc v2v3 conversion 2.39.0 -->
   <!-- category values: std, bcp, info, exp, and historic
      ipr values: full3667, noModification3667, noDerivatives3667
@@ -41,7 +41,7 @@
     <title abbrev="Maintaining Flow Balance">
     Maintaining CCNx or NDN flow balance with highly variable data object sizes
     </title>
-    <seriesInfo name="Internet-Draft" value="draft-oran-icnrg-flowbalance-latest"/>
+    <seriesInfo name="Internet-Draft" value="draft-oran-icnrg-flowbalance-03"/>
     <!-- add 'role="editor"' below for the editors if appropriate -->
 
     <!-- Another author who claims to be an editor -->
@@ -113,11 +113,11 @@
     
     <section anchor="description" numbered="true" toc="default">
       <name>Method to enhance congestion control with signaled size information in Interest Messages</name>
-      <t>Before diving into the specifics of the design, it is useful to consider how congestion control works in NDN/CCNx. Unlike the IP protocol family, which relies on end-to-end congestion control (e.g. TCP<xref target="RFC0793" format="default"/>, DCCP<xref target="RFC4340" format="default"/>, SCTP<xref target="RFC4960" format="default"/>, QUIC<xref target="I-D.ietf-quic-transport" format="default"/>), CCNx and NDN employ hop-by-hop congestion control. There is per-Interest/Data state at every hop of the path and therefore for each outstanding Interest, bandwidth for data returning on the inverse path can be allocated. In the current design, this allocation is done using simple Interest counting - by accepting one Interest packet from an downstream node, implicitly this provides a guarantee (either hard or soft) that there is sufficient bandwidth on the inverse direction of the link to send back one Data packet. A number of congestion control schemes have been developed that operate in this fashion, for example <xref target="Wang2013" format="default"/>,<xref target="Mahdian2016" format="default"/>,<xref target="Song2018" format="default"/>,<xref target="Carofiglio2012" format="default"/>.  Other schemes, like <xref target="Schneider2016" format="default"/> neither count nor police interests, but instead monitor queues using AQM (active queue management) to mark returning Data packets that have experienced congestion. It is worth noting that every congestion control algorithm has an explicit fairness goal and associated objective function (usually either <xref target="minmaxfairness" format="default"/> or <xref target="proportionalfairness" format="default"/>). If your fairness is to be based on resource usage, pure interest counting doesn't do the trick, since a consumer asking for large thing can saturate a link and shift loss to consumers asking for small things.</t>
+      <t>Before diving into the specifics of the design, it is useful to consider how congestion control works in NDN/CCNx. Unlike the IP protocol family, which relies on end-to-end congestion control (e.g. TCP<xref target="RFC0793" format="default"/>, DCCP<xref target="RFC4340" format="default"/>, SCTP<xref target="RFC4960" format="default"/>, QUIC<xref target="I-D.ietf-quic-transport" format="default"/>), CCNx and NDN employ hop-by-hop congestion control. There is per-Interest/Data state at every hop of the path and therefore for each outstanding Interest, bandwidth for data returning on the inverse path can be allocated. In the current design, this allocation is done using simple Interest counting - by queueing and subsequently forwarding one Interest message from an downstream node, implicitly this provides a guarantee (either hard or soft) that there is sufficient bandwidth on the inverse direction of the link to send back one Data message. A number of congestion control schemes have been developed that operate in this fashion, for example <xref target="Wang2013" format="default"/>,<xref target="Mahdian2016" format="default"/>,<xref target="Song2018" format="default"/>,<xref target="Carofiglio2012" format="default"/>.  Other schemes, like <xref target="Schneider2016" format="default"/> neither count nor police interests, but instead monitor queues using AQM (active queue management) to mark returning Data packets that have experienced congestion. It is worth noting that every congestion control algorithm has an explicit fairness goal and associated objective function (usually either <xref target="minmaxfairness" format="default"/> or <xref target="proportionalfairness" format="default"/>). If your fairness is to be based on resource usage, pure interest counting doesn't do the trick, since a consumer asking for large thing can saturate a link and shift loss to consumers asking for small things.</t>
       
-      <t>In order to deal with a larger dynamic range of data object size, some means is required to allocate link bandwidth for data messages in bytes with an upper bound larger than a link PMTU and a lower bound lower than a single link MTU. Since resources are allocated for returning Data based on arriving Interests, this information must be available in Interest messages.</t>
+      <t>In order to deal with a larger dynamic range of data object size, some means is required to allocate link bandwidth for data messages in bytes with an upper bound larger than a Path MTU and a lower bound lower than a single link MTU. Since resources are allocated for returning Data based on arriving Interests, this information must be available in Interest messages.</t>
       
-      <t>Therefore, one key idea is the inclusion of an <em>expected data size</em> TLV in each Interest message. This allows each forwarder on the path taken by the interest to accurately allocate bandwidth on the inverse path for the returning Data message. Also, by including the expected data size, large objects will have a corresponding weight in resource allocation, maintaining link and forwarder buffering fairness. The simpler Interest counting scheme was nominally "fair" on a per-exchange basis within the variations of data that fit in a single PMTU packet because all Interests produced similar amounts of data in return. In the absence of such a field, it is not feasible to allow a large dynamic range in object size. While schemes like <xref target="Schneider2016" format="default"/> would not employ the expected data size to allocate reverse link bandwidth, they can still benefit from the information to affect the AQM congestion marking algorithm, preferentially marking data packets that exceed the expected data size.</t>
+      <t>Therefore, one key idea is the inclusion of an <em>expected data size</em> TLV in each Interest message. This allows each forwarder on the path taken by the interest to more accurately allocate bandwidth on the inverse path for the returning Data message. Also, by including the expected data size, large objects will have a corresponding weight in resource allocation, maintaining link and forwarder buffering fairness. The simpler Interest counting scheme was nominally "fair" on a per-exchange basis within the variations of data that fit in a single PMTU packet because all Interests produced similar amounts of data in return. In the absence of such a field, it is not feasible to allow a large dynamic range in object size. While schemes like <xref target="Schneider2016" format="default"/> would not employ the expected data size to allocate reverse link bandwidth, they can still benefit from the information to affect the AQM congestion marking algorithm, preferentially marking data packets that exceed the expected data size.</t>
       
       <section anchor="prediction" numbered="true" toc="default">
         <name>How to predict the size of returning Data messages</name>
@@ -130,7 +130,7 @@
         
       <t>The more complex cases arise where the data size is not known at the time the Interest must be sent. Much of the nuance of the proposed scheme is in how mismatches between the expected data size and the actual data object returned are handled. The consumer can either under- or over-estimate the data size. In the former case, the under-estimate can lead to congestion and possible loss of data. In the latter case, bandwidth that could have been used by data objects requested by other consumers might be wasted. We first consider "honest" mis-estimates due to imperfect knowledge by the ICN application; later we consider malicious applications that are using the machinery to mount some form of attack. We also consider the effects of Interest aggregation if the aggregated Interests have differing expected data sizes. Also, it should be obvious that if the Data message arrives, the application learns its actual size, which may or may not be useful in adjusting the expected data size estimate for future Interests.</t>
       
-      <t>In all cases, the expected data size from the Interest can be incorporated in the corresponding Pending Interest Table (PIT) entry of each CCNx/NDN forwarder on the path and hence when a (possibly fragmented) Data object comes back, its total size is known and can be compared to the expected size in the PIT for a mismatch. Aside: In the case of fragmentation, we assume a fragmentation scheme in which the total data size can be known as soon as any one fragment is received (a reasonable assumption for most any well-designed fragmentation method).</t>
+      <t>In all cases, the expected data size from the Interest can be incorporated in the corresponding Pending Interest Table (PIT) entry of each CCNx/NDN forwarder on the path and hence when a (possibly fragmented) Data object comes back, its total size is known and can be compared to the expected size in the PIT for a mismatch. Aside: In the case of fragmentation, we assume a fragmentation scheme in which the total data size can be known as soon as any one fragment is received (a reasonable assumption for most any well-designed fragmentation method, such as that in <xref target='Ghali2013'/>).</t>
     </section>
     
     <section anchor="toobig" numbered="true" toc="default">
@@ -145,7 +145,7 @@
     
     <t>Either of the latter two strategies is acceptable from a congestion control point of view. However, it is not a good idea to simply drop the Data message with no feedback to the issuer of the Interest because the application has no way to learn the actual data size and retry. Further, recovery would be delayed until the failing Interest timed out. Therefore, an additional element needed in protocol semantics is the incorporation of a "Data too big" error message (via an "interest Return" packet in CCNx).</t>
     
-    <t>Upon dropping data as above, the CCNx/NDN forwarder converts the normal Data message into an Interest Return message containing the with the T_MTU_TOO_LARGE error code and the actual size of the data object instead of the data object content. It propagates that back toward the client identically to how the original Data message would have been handled. Subsequent nodes upon receiving the T_MTU_TOO_LARGE error treat it as all other Interest Return errors. When the Interest Return eventually arrives back to the issuer of the Interest, the user can, they desire, reissue the Interest with the correct expected data size.</t>
+    <t>Upon dropping data as above, the CCNx/NDN forwarder converts the normal Data message into an Interest Return message containing the with the existing T_MTU_TOO_LARGE error code and the actual size of the data object instead of the data object content. It propagates that back toward the client identically to how the original Data message would have been handled. Subsequent nodes upon receiving the T_MTU_TOO_LARGE error treat it as all other Interest Return errors. When the Interest Return eventually arrives back to the issuer of the Interest, the user MAY reissue the Interest with the correct expected data size.</t>
     
     <t>One detail to note is that an Interest Return carrying T_MTU_TOO_LARGE must be deterministically smaller than the expected data size in all cases. This is clearly the case for large data objects, but there is a corner case with small data objects. There has to be a minimum expected data size that a client can specify in their Interests, and that minimum cannot be smaller than the size of a T_MTU_TOO_LARGE Interest Return</t>
   </section>
@@ -158,12 +158,13 @@
           <li>Police consumer behavior and decrease the expected data size in one or more future Interests to compensate</li>
           <li>For small objects, do more optimistic resource allocation on the links on the presumption that there will be some "slack" due to clients overestimating data object size.</li>
         </ul>
-
-    <t>One protocol detail of CCNx/NDN that needs to be dealt with is Interest Aggregation. This happens when multiple Interests arrive at a forwarder for the same Named object. These are aggregated such that one of them (i.e.the first to arrive and create PIT state) is forwarded, and the rest are dropped while marking the arrival face so the data can be sent back to the multiple requesting clients. Interest aggregation interacts with expected data size if Interests from different clients contain different values of the expected data size. As above, the simplest solution to this problem is to ignore it, as most error cases are benign. However, there is one problematic error case where one client provides an accurate expected data size, but another who issued the Interest first underestimates, causing both to receive a Data too big error. This introduces a denial of service vulnerability, which we discuss below together with the other malicious actor cases.</t>
  </section>
  
  <section anchor="aggregation" numbered="true" toc="default">
         <name>Interactions with Interest Aggregation</name>
+
+    <t>One protocol detail of CCNx/NDN that needs to be dealt with is Interest Aggregation. This happens when multiple Interests arrive at a forwarder for the same Named object. These are aggregated such that one of them (i.e.the first to arrive and create PIT state) is forwarded, and the rest are dropped while marking the arrival face so the data can be sent back to the multiple requesting clients. Interest aggregation interacts with expected data size if Interests from different clients contain different values of the expected data size. As above, the simplest solution to this problem is to ignore it, as most error cases are benign. However, there is one problematic error case where one client provides an accurate expected data size, but another who issued the Interest first underestimates, causing both to receive a Data too big error. This introduces a denial of service vulnerability, which we discuss below together with the other malicious actor cases.</t>
+
     <t>Interest Aggregation, while a powerful feature for maintaining flow balance when multiple consumers send Interests for the same Named object, introduces subtle complications. Whenever a second or subsequent Interest arrives at a forwarder with an active PIT entry it is possible that those Interests carry different parameters, for example hop limit, payload, etc. It is therefore necessary to specify the exact behavior of the forwarder for each of the parameters that might differ. In the case of the expected data size parameter defined here, the value is associated with the ingress face on which the Interest creating the PIT entry arrived, as opposed to being global to the PIT entry as a whole. There are two cases to consider:</t>
     
         <ol spacing="normal" type="1">
@@ -171,7 +172,7 @@
           <li>The arriving interest carries an expected data size larger than any of the values associated with the PIT entry.</li>
         </ol>
     
-    <t>For Case (1) the Interest can be safely aggregated since the upstream links will have sufficient bandwidth allocated based on the larger expected data size (assuming the original Interest's expected data size was itself sufficiently large to accommodate the actual size of the returning Data. On the other hand, should the incoming face have bandwidth allocated based on the larger existing Interest's expected data size, or on the smaller value in the arriving interest? Here there are two possible approaches:</t>
+    <t>For Case (1) the Interest can be safely aggregated since the upstream links will have sufficient bandwidth allocated based on the larger expected data size (assuming the original Interest's expected data size was itself sufficiently large to accommodate the actual size of the returning Data). On the other hand, should the incoming face have bandwidth allocated based on the larger existing Interest's expected data size, or on the smaller value in the arriving interest? Here there are two possible approaches:</t>
     
         <ol spacing="normal" type="a">
           <li>Allocate based on the data size already in the PIT. In this case the consumer sending the earlier Interest can cause over-allocation of link bandwidth for other incoming faces, but there will not be a T_MTU_TOO_LARGE error generated for that Interest</li>
@@ -189,9 +190,11 @@
 	
 	<t>For Case (2) above, the Interest MUST be forwarded rather than aggregated to prevent a consumer from mounting a denial of service attack by sending intentionally too small expected data size (see <xref target="malicious" format="default"/> for additional detail on this and other attacks). As above for Case (1) it is RECOMMENDED that policy (b) above be followed.</t>
   </section>
+  
   <section anchor="compatibility" numbered="true" toc="default">
         <name>Operation when some Interests lack the expected data size option and some have it</name>
-    <t>Since the expected data size hop-by-hop option forwarders need to be prepared to handle an arbitrary mix of the two forms. There are two general things to address. </t>
+  
+    <t>Since the expected data size is an optional hop-by-hop packet field, forwarders need to be prepared to handle an arbitrary mix of packets containing or lacking this option. There are two general things to address. </t>
     
     <t>First, we assume that any forwarder supporting expected data size is running a more sophisticated congestion control algorithm that one employing simple interest counting. The link bandwidth resource allocation is therefore based directly, or indirectly, on the expected Data size in bytes. Therefore, the forwarder has to assign a value to use in the resource allocation for the reverse link. This specification does not mandate any particular approach or a default value to use. However, in the absence on other guidance, it makes sense to do one of two things:</t>
     
@@ -221,7 +224,7 @@
       <name>Dealing with malicious actors</name>
    <t>First we note that various known attacks in CCNx or NDN can also be mounted by users employing this method. Attacks that involve interest flooding, cache pollution, cache poisoning, etc. are neither worsened nor ameliorated by the introduction of the congestion control capabilities described here. However, there are two new vulnerabilities that need to be dealt with. These two new vulnerabilities involve intentional mis-estimation of data size.</t>
  
-   <t>The first is a consumer who intentionally over-estimates data size with the goal of preventing other users from using the bandwidth. This is at most a minor concern given the above discussion of over-estimation by honest clients. If one of the amelioration techniques above are used, the case of malicious over-estimation is also dealt with adequately.</t>
+   <t>The first is a consumer who intentionally over-estimates data size with the goal of preventing other users from using the bandwidth. This is at most a minor additional concern given the discussion of how to handle over-estimation by honest clients in <xref target='toobig'/>. If one of the amelioration techniques described there is used, the case of malicious over-estimation is also dealt with adequately.</t>
  
    <t>The second is a user who intentionally under-estimates the data size with the goal having its Interest processed while the other aggregated interests are not processed, thereby causing T_MTU_TOO_LARGE errors and denying service to the other users with overlapping requests. There are a number of possible mitigation techniques for this attack vector, ranging in complexity. We outline two below; there may be others as or more effective with acceptable complexity and overhead:</t>
    
@@ -265,7 +268,7 @@
     </section>
  </section>
  
- !-- This PI places the pagebreak correctly (before the section title) in the text output. -->
+<!-- This PI places the pagebreak correctly (before the section title) in the text output. -->
 <!--<?rfc needLines="8" ?>-->
 <!-- Possibly a 'Contributors' section ... -->
 
@@ -304,6 +307,12 @@
       <t>
       </t>
     </section>
+    
+  <section anchor="Ackknowledgements" numbered='true' toc='default'>
+  	<name>Acknowledgements</name>
+  	<t>Klaus Schneider and Ken Calvert have contributed a number of useful comments which have substantially improved the document.</t>
+  </section>
+  
 </middle>
 
 <back>
@@ -458,6 +467,7 @@
 v00 2019-07-13  DRO Initial version
 v01 2019-08-10	DRO	Respond to comments by Naveen Nathan and Klaus Schneider
 v02 2020-02-04	DRO Convert to xml2rfc v3 and minor text adjustments 
+v03 2020-		DRO Changes based on comments by Ken Calvert
 	-->
   </back>
 </rfc>
